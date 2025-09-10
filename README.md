@@ -21,10 +21,10 @@ Here's the plan for this build.
    This is going to be in the intermediate build territory, and as we're on a time limit we'll
    need to focus on the build and can't make too many diversions cover theory in-depth.
    As a result, you should already be comfortable with:
-   • Java
-   • Spring Boot
-   • Spring Security
+    • Java
+    • Spring Boot
+    • Spring Security
 
    Have a basic understanding of:
-   • OAuth2 and OpenID connect
-   • React + npm
+    • OAuth2 and OpenID connect
+    • React + npm

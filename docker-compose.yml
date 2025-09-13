@@ -15,9 +15,7 @@ services:
     # ⚠ - Do no store plaintext passwords in source control. We
     # do so here as this is a builder.
     environment:
-      POSTGRES_PASSWORD: ticket_pass
-      POSTGRES_USER: ticket_user
-      POSTGRES_DB: ticket_db
+      POSTGRES_PASSWORD: admin
   # Adminer provides a web UI for database management
   adminer:
     image: adminer:latest

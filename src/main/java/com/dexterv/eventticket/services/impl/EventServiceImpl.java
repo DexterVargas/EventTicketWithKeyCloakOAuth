@@ -1,6 +1,6 @@
 package com.dexterv.eventticket.services.impl;
 
-import com.dexterv.eventticket.domain.dtos.CreateEventRequest;
+import com.dexterv.eventticket.domain.CreateEventRequest;
 import com.dexterv.eventticket.domain.entities.Event;
 import com.dexterv.eventticket.domain.entities.TicketType;
 import com.dexterv.eventticket.domain.entities.User;

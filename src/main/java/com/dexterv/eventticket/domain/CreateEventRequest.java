@@ -1,4 +1,4 @@
-package com.dexterv.eventticket.domain.dtos;
+package com.dexterv.eventticket.domain;
 
 import com.dexterv.eventticket.domain.entities.EventStatusEnum;
 import lombok.*;

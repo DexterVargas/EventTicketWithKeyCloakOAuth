@@ -1,9 +1,8 @@
 package com.dexterv.eventticket.controllers;
 
 import com.dexterv.eventticket.domain.CreateEventRequest;
-import com.dexterv.eventticket.domain.dtos.CreateEventRequestDto;
-import com.dexterv.eventticket.domain.dtos.CreateEventResponseDto;
-import com.dexterv.eventticket.domain.dtos.ListEventResponseDto;
+import com.dexterv.eventticket.domain.UpdateEventRequest;
+import com.dexterv.eventticket.domain.dtos.*;
 import com.dexterv.eventticket.domain.entities.Event;
 import com.dexterv.eventticket.mappers.EventMapper;
 import com.dexterv.eventticket.services.EventService;
@@ -55,6 +54,37 @@ public class EventController {
 
         Page<Event> events = eventService.listEventsForOrganizer(userId, pageable);
 
-        return ResponseEntity.ok(events.map(eventMapper::toLstEventResponseDto));
+        return ResponseEntity.ok(events.map(eventMapper::toListEventResponseDto));
+    }
+
+    @GetMapping(path="/{eventId}")
+    public ResponseEntity<GetEventDetailsResponseDto> getEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId) {
+
+        // Get the user id from JWT token
+        UUID userId = parseUserId(jwt);
+
+        // Call the service layer and transform the response
+        return eventService.getEventForOrganizer(userId, eventId)
+                .map(eventMapper::toGetEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping(path="/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> updateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto
+    ) {
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+
+        Event updateEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
+
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updateEvent);
+
+        return ResponseEntity.ok(updateEventResponseDto);
     }
 }

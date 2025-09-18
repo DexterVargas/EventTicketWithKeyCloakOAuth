@@ -43,4 +43,28 @@ public class GlobalExceptionHandler {
         return  new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EventUpdateException.class)
+    public ResponseEntity<ErrorDto> handleEventUpdateException(EventUpdateException ex){
+        log.error("Caught EventUpdateException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Unable to update event");
+        return  new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TicketTypeNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleTicketTypeNotFoundException(TicketTypeNotFoundException ex){
+        log.error("Caught TicketTypeNotFoundException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Ticket type not found");
+        return  new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleEventNotFoundException(EventNotFoundException ex){
+        log.error("Caught EventNotFoundException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Event not found");
+        return  new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+    }
+
 }

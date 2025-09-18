@@ -3,21 +3,23 @@ package com.dexterv.eventticket.controllers;
 import com.dexterv.eventticket.domain.CreateEventRequest;
 import com.dexterv.eventticket.domain.dtos.CreateEventRequestDto;
 import com.dexterv.eventticket.domain.dtos.CreateEventResponseDto;
+import com.dexterv.eventticket.domain.dtos.ListEventResponseDto;
 import com.dexterv.eventticket.domain.entities.Event;
 import com.dexterv.eventticket.mappers.EventMapper;
 import com.dexterv.eventticket.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.UUID;
+
+import static com.dexterv.eventticket.util.JwtUtil.parseUserId;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -45,5 +47,14 @@ public class EventController {
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
 
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ListEventResponseDto>> listEvents(@AuthenticationPrincipal Jwt jwt, Pageable pageable) {
+        UUID userId = parseUserId(jwt);
+
+        Page<Event> events = eventService.listEventsForOrganizer(userId, pageable);
+
+        return ResponseEntity.ok(events.map(eventMapper::toLstEventResponseDto));
     }
 }

@@ -9,8 +9,10 @@ import com.dexterv.eventticket.repositories.EventRepository;
 import com.dexterv.eventticket.repositories.UserRepository;
 import com.dexterv.eventticket.services.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,5 +56,11 @@ public class EventServiceImpl implements EventService {
         eventToCreate.setOrganizer(organizer);
 
         return eventRepository.save(eventToCreate);
+    }
+
+    @Override
+    public Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable) {
+        // use the repository to find events by organizer ID with pagination
+        return  eventRepository.findByOrganizerId(organizerId, pageable);
     }
 }

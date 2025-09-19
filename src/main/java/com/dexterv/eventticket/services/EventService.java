@@ -4,6 +4,8 @@ import com.dexterv.eventticket.domain.CreateEventRequest;
 import com.dexterv.eventticket.domain.UpdateEventRequest;
 import com.dexterv.eventticket.domain.entities.Event;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.awt.print.Pageable;
 import java.util.Optional;
@@ -22,5 +24,14 @@ public interface EventService {
 
     Page<Event> listPublishedEvents(Pageable pageable);
 
-//    Page<Event> deleteEventForOrganizer(UUID organizerId);
+    @Query(value = "SELECT * FROM events WHERE " +
+            "status = 'PUBLISHED' AND " +
+            "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) " +
+            "@@ plainto_tsquery('english', :searchTerm)",
+            countQuery = "SELECT count(*) FROM events WHERE " +
+                    "status = 'PUBLISHED' AND " +
+                    "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) " +
+                    "@@ plainto_tsquery('english', :searchTerm)",
+            nativeQuery = true)
+    Page<Event> searchPublishedEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

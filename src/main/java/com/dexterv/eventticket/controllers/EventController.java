@@ -87,4 +87,21 @@ public class EventController {
 
         return ResponseEntity.ok(updateEventResponseDto);
     }
+
+    @DeleteMapping(path="/{eventId")
+    public ResponseEntity<Void> deleteEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ){
+        UUID userId = parseUserId(jwt);
+        eventService.deleteEventForOrganizer(userId, eventId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ListPublishedEventResponseDto>> listPublishedEvents(Pageable pageable) {
+        // Map the events to DTOs and return them in response
+        return ResponseEntity.ok(eventService.listPublishedEvents(pageable)
+                .map(eventMapper::toListPublishedEventResponseDto));
+    }
 }

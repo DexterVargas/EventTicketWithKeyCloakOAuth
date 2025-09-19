@@ -4,6 +4,7 @@ import com.dexterv.eventticket.domain.CreateEventRequest;
 import com.dexterv.eventticket.domain.UpdateEventRequest;
 import com.dexterv.eventticket.domain.UpdateTicketTypeRequest;
 import com.dexterv.eventticket.domain.entities.Event;
+import com.dexterv.eventticket.domain.entities.EventStatusEnum;
 import com.dexterv.eventticket.domain.entities.TicketType;
 import com.dexterv.eventticket.domain.entities.User;
 import com.dexterv.eventticket.exceptions.EventNotFoundException;
@@ -13,6 +14,7 @@ import com.dexterv.eventticket.exceptions.UserNotFoundException;
 import com.dexterv.eventticket.repositories.EventRepository;
 import com.dexterv.eventticket.repositories.UserRepository;
 import com.dexterv.eventticket.services.EventService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -134,5 +136,18 @@ public class EventServiceImpl implements EventService {
         }
 
         return eventRepository.save(existingEvent);
+    }
+
+    @Override
+    @Transactional
+    public void deleteEventForOrganizer(UUID organizerId, UUID id) {
+        // Get the event and delete it if found
+        getEventForOrganizer(organizerId, id).ifPresent(eventRepository::delete);
+    }
+
+    @Override
+    public Page<Event> listPublishedEvents(Pageable pageable) {
+        // Use the repository to find events with PUBLISHED status
+        return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
     }
 }

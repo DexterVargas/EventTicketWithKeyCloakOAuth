@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 // Allow public access to published events
                                 .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
                                 .requestMatchers("/api/v1/events").hasRole("ORGANIZER")
+                                .requestMatchers("/api/v1/ticket-validations").hasRole("STAFF")
                                 // All other endpoints require authentication
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)

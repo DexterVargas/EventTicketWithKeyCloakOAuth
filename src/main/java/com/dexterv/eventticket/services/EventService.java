@@ -34,4 +34,6 @@ public interface EventService {
                     "@@ plainto_tsquery('english', :searchTerm)",
             nativeQuery = true)
     Page<Event> searchPublishedEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    Optional<Event> getPublishedEvent(UUID id);
 }
